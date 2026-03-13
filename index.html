@@ -440,7 +440,15 @@
                       <button key={g.key} onClick={() => {
                         setSelectedGroups(prev => {
                           const next = new Set(prev);
-                          next.has(g.key) ? next.delete(g.key) : next.add(g.key);
+                          const wasActive = next.has(g.key);
+                          wasActive ? next.delete(g.key) : next.add(g.key);
+                          if (!wasActive && typeof gtag !== 'undefined') {
+                            gtag('event', 'indikator_kivalasztva', {
+                              event_category: 'Indikátor',
+                              event_label: g.label,
+                              value: 1
+                            });
+                          }
                           return next;
                         });
                       }} style={{
