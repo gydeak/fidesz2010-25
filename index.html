@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Konvergencia Helyezések — KKE-11</title>
+  <title>A FIDESZ kormányok teljesítménye 2010-2025 között a Közép-Kelet-Európai országok viszonylatában</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -30,29 +30,29 @@
     const DATASETS = [
       { id: "demo_mlexpec",   label: "Várható élettartam",  method: "diff",  goodDirection: +1, params: { freq: "A", unit: "YR", sex: "T", age: "Y_LT1" },                                               from: "2010",    to: "2024"    },
       { id: "ilc_di03",       label: "Mediánjövedelem",     method: "ratio", goodDirection: +1, params: { freq: "A", age: "TOTAL", sex: "T", indic_il: "MED_E", unit: "PPS" },                             from: "2010",    to: "2025"    },
-      { id: "env_ac_aigg_q",  label: "Üvegházgáz",          method: "ratio", goodDirection: -1, params: { freq: "Q", s_adj: "SA", nace_r2: "TOTAL_HH", airpol: "GHG", unit: "T_HAB" },                    from: "2010-Q1", to: "2025-Q3" },
+      { id: "env_ac_aigg_q",  label: "Üvegházhatású gáz",          method: "ratio", goodDirection: -1, params: { freq: "Q", s_adj: "SA", nace_r2: "TOTAL_HH", airpol: "GHG", unit: "T_HAB" },                    from: "2010-Q1", to: "2025-Q3" },
       { id: "demo_find",      label: "Termékenység",         method: "ratio", goodDirection: +1, params: { freq: "A", indic_de: "TOTFERRT" },                                                               from: "2010",    to: "2024"    },
       { id: "lfsi_emp_q",     label: "Foglalkoztatás",       method: "ratio", goodDirection: +1, params: { freq: "Q", indic_em: "ACT", s_adj: "NSA", sex: "T", age: "Y15-74", unit: "PC_POP" },            from: "2010-Q2", to: "2025-Q3" },
       { id: "gov_10q_ggdebt", label: "Államadósság",         method: "ratio", goodDirection: -1, params: { freq: "Q", na_item: "GD", sector: "S13", unit: "PC_GDP" },                                      from: "2010-Q2", to: "2025-Q3" },
       { id: "gov_10dd_edpt1", label: "Kamatfizetés",         method: "diff",  goodDirection: -1, params: { freq: "A", unit: "PC_GDP", sector: "S13", na_item: "D41PAY" },                                  from: "2010",    to: "2024"    },
       { id: "ilc_di12",       label: "Jövedelmi egyenlőség",                 method: "ratio", goodDirection: -1, params: { freq: "A", age: "TOTAL", statinfo: "GINI_HND" },                                                from: "2014",    to: "2025"    },
-      { id: "nasa_10_f_bs",   label: "Házt. vagyon",         method: "ratio", goodDirection: +1, params: { freq: "A", unit: "PC_GDP", co_nco: "NCO", sector: "S14_S15", finpos: "LIAB", na_item: "BF90" }, from: "2010",    to: "2024"    },
-      { id: "prc_hicp_midx",  label: "Infláció (HICP)",      method: "ratio", goodDirection: -1, params: { freq: "M", unit: "I15", coicop: "CP00" },                                                       from: "2010-04", to: "2025-12" },
+      { id: "nasa_10_f_bs",   label: "Háztartások pénzügyi vagyona",         method: "ratio", goodDirection: +1, params: { freq: "A", unit: "PC_GDP", co_nco: "NCO", sector: "S14_S15", finpos: "LIAB", na_item: "BF90" }, from: "2010",    to: "2024"    },
+      { id: "prc_hicp_midx",  label: "Infláció",      method: "ratio", goodDirection: -1, params: { freq: "M", unit: "I15", coicop: "CP00" },                                                       from: "2010-04", to: "2025-12" },
       { id: "prc_hpi_q",      label: "Lakásárak",            method: "ratio", goodDirection: -1, params: { freq: "Q", purchase: "TOTAL", unit: "I10_Q" },                                                  from: "2010-Q1", to: "2025-Q3" },
       { id: "crim_off_cat",   label: "Gyilkosságok",              method: "ratio", goodDirection: -1, params: { freq: "A", iccs: "ICCS0101", unit: "NR" },                                                      from: "2010",    to: "2023"    },
-      { id: "rd_e_gerdtot",   label: "K+F ráfordítás",       method: "diff",  goodDirection: +1, params: { freq: "A", sectperf: "TOTAL", unit: "PC_GDP" },                                                 from: "2010",    to: "2024"    },
+      { id: "rd_e_gerdtot",   label: "Kutatás fejlesztés",       method: "diff",  goodDirection: +1, params: { freq: "A", sectperf: "TOTAL", unit: "PC_GDP" },                                                 from: "2010",    to: "2024"    },
       { id: "ilc_peps01n_tot", label: "Szegénység",            method: "ratio", goodDirection: -1, params: { freq: "A", unit: "PC", age: "TOTAL",  sex: "T" },                                                 from: "2015",    to: "2025",    dsOverride: "ilc_peps01n" },
       { id: "ilc_peps01n_ylt", label: "Gyermekszegénység",     method: "ratio", goodDirection: -1, params: { freq: "A", unit: "PC", age: "Y_LT18", sex: "T" },                                                 from: "2015",    to: "2025",    dsOverride: "ilc_peps01n" },
       { id: "ilc_peps01n_old", label: "Idős szegénység",       method: "ratio", goodDirection: -1, params: { freq: "A", unit: "PC", age: "Y_GE65", sex: "T" },                                                 from: "2015",    to: "2025",    dsOverride: "ilc_peps01n" },
       { id: "crim_off_cat_lop", label: "Lopások",               method: "ratio", goodDirection: -1, params: { freq: "A", iccs: "ICCS0502", unit: "NR" },                                                         from: "2010",    to: "2023",    dsOverride: "crim_off_cat" },
-      { id: "hlth_cd_asdr2_sui", label: "Öngyilkosság",          method: "ratio", goodDirection: -1, params: { freq: "A", unit: "RT", sex: "T", age: "TOTAL", icd10: "X60-X84_Y870" },                          from: "2011",    to: "2022",    dsOverride: "hlth_cd_asdr2" },
+      { id: "hlth_cd_asdr2_sui", label: "Öngyilkosságok",          method: "ratio", goodDirection: -1, params: { freq: "A", unit: "RT", sex: "T", age: "TOTAL", icd10: "X60-X84_Y870" },                          from: "2011",    to: "2022",    dsOverride: "hlth_cd_asdr2" },
       { id: "hlth_sha11_hf",      label: "Egészségügyi kiadás",   method: "ratio", goodDirection: +1, params: { freq: "A", unit: "PC_GDP", icha11_hf: "TOT_HF" },                                                  from: "2010",    to: "2024"    },
       { id: "gov_10a_exp_edu",    label: "Oktatási kiadás",        method: "ratio", goodDirection: +1, params: { freq: "A", unit: "PC_GDP", sector: "S13", cofog99: "GF09", na_item: "TE" },                        from: "2010",    to: "2024",    dsOverride: "gov_10a_exp" },
       { id: "gov_10a_exp_def",    label: "Védelmi kiadás",         method: "ratio", goodDirection: +1, params: { freq: "A", unit: "PC_GDP", sector: "S13", cofog99: "GF02", na_item: "TE" },                        from: "2010",    to: "2024",    dsOverride: "gov_10a_exp" },
       // Nyugdíj: derived = spr_exp_pens / spr_pns_ben (egy főre jutó kiadás)
       { id: "spr_exp_pens",     label: "Nyugdíjkiadás (PPS)",     method: "ratio", goodDirection: +1, params: { freq: "A", spdepb: "OLD", spdepm: "TOTAL", unit: "MIO_PPS" }, from: "2010", to: "2023", hidden: true },
       { id: "spr_pns_ben",       label: "Nyugdíjasok száma",        method: "ratio", goodDirection: +1, params: { freq: "A", spdepm: "TOTAL", spscheme: "TOTAL", spdepb: "OLD", sex: "T", unit: "PER" }, from: "2010", to: "2023", hidden: true },
-      { id: "nyugdij_egy_fore",  label: "Egy főre jutó nyugdíj",    method: "ratio", goodDirection: +1, params: null, from: "2010", to: "2023", derived: ["spr_exp_pens", "spr_pns_ben"] },
+      { id: "nyugdij_egy_fore",  label: "Átlagnyugdíj",    method: "ratio", goodDirection: +1, params: null, from: "2010", to: "2023", derived: ["spr_exp_pens", "spr_pns_ben"] },
     ];
 
     async function fetchDataset(ds) {
@@ -255,10 +255,12 @@
 
     function App() {
       const [results, setResults] = useState({});
+      const [rawData, setRawData] = useState({});
       const [loading, setLoading] = useState({});
       const [errors, setErrors] = useState({});
       const [selectedGroups, setSelectedGroups] = useState(() => new Set());
       const [showDetails, setShowDetails] = useState(false);
+      const [sortByCol, setSortByCol] = useState('last'); // 'first' | 'last'
 
       const loadAll = useCallback(async () => {
         const parsedCache = {};
@@ -278,7 +280,7 @@
                 parsed[c] = {};
                 for (const t of Object.keys(numData[c])) {
                   if (denData[c][t] && denData[c][t] !== 0)
-                    parsed[c][t] = numData[c][t] / denData[c][t];
+                    parsed[c][t] = (numData[c][t] * 1_000_000) / denData[c][t];
                 }
               }
             } else {
@@ -290,6 +292,7 @@
             if (countryCount === 0) throw new Error("Üres válasz");
             const scores = computeAllScores(parsed, ds.method, ds.goodDirection);
             setResults(prev => ({ ...prev, [ds.id]: rankCountries(scores) }));
+            setRawData(prev => ({ ...prev, [ds.id]: parsed }));
           } catch (e) {
             setErrors(prev => ({ ...prev, [ds.id]: e.message }));
           } finally {
@@ -314,6 +317,93 @@
       }
       const sorted = [...COUNTRIES].sort((a, b) => (avgRanks[a] ?? 999) - (avgRanks[b] ?? 999));
 
+      // Második táblázat: első és utolsó nyers adat szerinti helyezések
+      const singleDs = visibleDatasets.length === 1 ? visibleDatasets[0] : null;
+
+      // Minden visible dataset-re: első és utolsó közös időpont
+      const getCommonTimes = (datasets) => {
+        if (datasets.length === 0) return { first: null, last: null };
+        const timeSets = datasets.map(ds => {
+          const allTimes = new Set();
+          for (const c of COUNTRIES) {
+            Object.keys(rawData[ds.id]?.[c] || {}).forEach(t => allTimes.add(t));
+          }
+          return allTimes;
+        });
+        // közös időpontok ahol MINDEN ország és MINDEN dataset adott
+        const allCountryTimes = datasets.map(ds =>
+          COUNTRIES.map(c => new Set(Object.keys(rawData[ds.id]?.[c] || {})))
+        );
+        // időpontok amelyek minden dataset minden országánál megvannak
+        let common = null;
+        for (const ds of datasets) {
+          const dsCountryTimes = COUNTRIES.map(c => new Set(Object.keys(rawData[ds.id]?.[c] || {})));
+          const intersection = dsCountryTimes.reduce((a, b) => new Set([...a].filter(x => b.has(x))));
+          common = common === null ? intersection : new Set([...common].filter(x => intersection.has(x)));
+        }
+        if (!common || common.size === 0) return { first: null, last: null };
+        const sorted = [...common].sort();
+        return { first: sorted[0], last: sorted[sorted.length - 1] };
+      };
+
+      const { first: firstTime, last: lastTime } = getCommonTimes(visibleDatasets);
+
+      // Első időpont szerinti rangsor (minden visible dataset-re)
+      const firstRanks = {};
+      const lastRanks = {};
+      const firstRawVals = {}; // csak single dataset esetén
+      const lastRawVals = {};
+
+      if (firstTime && lastTime) {
+        if (singleDs) {
+          // Nyers értékek single dataset esetén
+          for (const c of COUNTRIES) {
+            firstRawVals[c] = rawData[singleDs.id]?.[c]?.[firstTime] ?? null;
+            lastRawVals[c] = rawData[singleDs.id]?.[c]?.[lastTime] ?? null;
+          }
+        } else {
+          // Átlag helyezés minden visible dataset első/utolsó időpontján
+          for (const ds of visibleDatasets) {
+            // első időpont rangsor erre a datasetre
+            const firstScores = {};
+            const lastScores = {};
+            for (const c of COUNTRIES) {
+              const fv = rawData[ds.id]?.[c]?.[firstTime];
+              const lv = rawData[ds.id]?.[c]?.[lastTime];
+              if (fv != null) firstScores[c] = ds.goodDirection === 1 ? fv : -fv;
+              if (lv != null) lastScores[c] = ds.goodDirection === 1 ? lv : -lv;
+            }
+            const fRanked = rankCountries(firstScores);
+            const lRanked = rankCountries(lastScores);
+            for (const c of COUNTRIES) {
+              if (fRanked[c] != null) firstRanks[c] = (firstRanks[c] || []).concat(fRanked[c]);
+              if (lRanked[c] != null) lastRanks[c] = (lastRanks[c] || []).concat(lRanked[c]);
+            }
+          }
+        }
+      }
+
+      const firstAvgRanks = {};
+      const lastAvgRanks = {};
+      if (!singleDs) {
+        for (const c of COUNTRIES) {
+          firstAvgRanks[c] = firstRanks[c]?.length > 0 ? firstRanks[c].reduce((a,b)=>a+b,0)/firstRanks[c].length : null;
+          lastAvgRanks[c] = lastRanks[c]?.length > 0 ? lastRanks[c].reduce((a,b)=>a+b,0)/lastRanks[c].length : null;
+        }
+      }
+
+      // Rendezés az első vagy utolsó adat szerint
+      const sortedByLast = [...COUNTRIES].sort((a, b) => {
+        const isFirst = sortByCol === 'first';
+        const va = singleDs
+          ? ((isFirst ? firstRawVals[a] : lastRawVals[a]) ?? (singleDs.goodDirection === 1 ? -Infinity : Infinity))
+          : ((isFirst ? firstAvgRanks[a] : lastAvgRanks[a]) ?? 999);
+        const vb = singleDs
+          ? ((isFirst ? firstRawVals[b] : lastRawVals[b]) ?? (singleDs.goodDirection === 1 ? -Infinity : Infinity))
+          : ((isFirst ? firstAvgRanks[b] : lastAvgRanks[b]) ?? 999);
+        return singleDs ? (singleDs.goodDirection === 1 ? vb - va : va - vb) : va - vb;
+      });
+
       return (
         <div style={{ fontFamily: "'Segoe UI', sans-serif", background: "#0b1426", minHeight: "100vh", padding: "28px 16px", color: "#e2e8f0" }}>
           <div style={{ maxWidth: 1500, margin: "0 auto" }}>
@@ -322,9 +412,6 @@
               <h1 style={{ fontSize: 20, fontWeight: 700, color: "#f8fafc", letterSpacing: 1, margin: 0, textTransform: "uppercase" }}>
                 A FIDESZ kormányok teljesítménye 2010-2025 között a Közép-Kelet-Európai országok viszonylatában
               </h1>
-              <p style={{ color: "#64748b", fontSize: 11, margin: "5px 0 0" }}>
-                Eurostat indikátorok · 1 = legjobb konvergencia teljesítmény az adott területen
-              </p>
               {!allDone && (
                 <div style={{ marginTop: 10 }}>
                   <div style={{ background: "#1e293b", borderRadius: 4, height: 5, width: 260, margin: "0 auto", overflow: "hidden" }}>
@@ -335,7 +422,7 @@
               )}
               <div style={{ marginTop: 16, background: "#111827", borderRadius: 12, padding: "16px 20px" }}>
                 <p style={{ color: "#94a3b8", fontSize: 12, marginBottom: 12, textAlign: "left" }}>
-                  Kérjük válassza ki az Ön számára fontos témaköröket, hogy meglássa a FIDESZ kormányok összesített teljesítményét a többi országhoz képest. Az indikátorok kiválasztása után a táblázatban megjelenik az országok elért helyezése (1 = legjobb konvergencia teljesítmény). A "Részletek" gombra kattintva láthatóvá válnak az egyes indikátorok szerinti helyezések is, ahol zölddel jelöltük azokat, ahol a magasabb érték jobb konvergenciát jelent, pirossal pedig azokat, ahol az alacsonyabb érték számít jobbnak.:
+                  Kérjük válassza ki az Ön számára fontos témaköröket, hogy meglássa a FIDESZ kormányok összesített teljesítményét a többi országhoz képest. Az indikátorok kiválasztása után a táblázatban megjelenik az országok elért helyezése (1 = legjobb konvergencia teljesítmény). A "Részletek" gombra kattintva láthatóvá válnak az egyes indikátorok szerinti helyezések is, ahol zölddel jelöltük azokat, ahol a magasabb érték jobb konvergenciát jelent, pirossal pedig azokat, ahol az alacsonyabb érték számít jobbnak (adatok forrása EUROSTAT):
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {GROUPS.map(g => {
@@ -481,6 +568,98 @@
                     <span style={{ color: "#f87171" }}>▼ jobb</span>: csökkenés a cél (adósság, infláció, egyenlőtlenség, bűnözés, üvegházgáz, lakásár, kamat, szegénység, öngyilkosság)
                   </div>
                 </div>
+
+                {firstTime && lastTime && (
+                  <div style={{ marginTop: 32 }}>
+                    <div style={{ marginBottom: 10, textAlign: "center" }}>
+                      <span style={{ color: "#94a3b8", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>
+                        Abszolút helyzet
+                      </span>
+                      <span style={{ color: "#475569", fontSize: 10, marginLeft: 8 }}>
+                        {singleDs ? "– nyers értékek" : "– átlagos helyezés a kiindulási és záró évben"}
+                      </span>
+                    </div>
+                    <div style={{ overflowX: "auto", borderRadius: 10, boxShadow: "0 4px 40px rgba(0,0,0,0.5)" }}>
+                      <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 2, fontSize: 12 }}>
+                        <thead>
+                          <tr>
+                            <th style={{
+                              background: "#151f35", padding: "10px 14px", textAlign: "left",
+                              color: "#94a3b8", fontWeight: 600, fontSize: 10, letterSpacing: 1,
+                              textTransform: "uppercase", borderRadius: 6,
+                              position: "sticky", left: 0, zIndex: 10, minWidth: 145
+                            }}>Ország</th>
+                            <th onClick={() => setSortByCol('first')} style={{
+                              background: sortByCol === 'first' ? "#2d2500" : "#1c1a0e",
+                              padding: "10px 10px", textAlign: "center",
+                              color: sortByCol === 'first' ? "#fde68a" : "#fbbf24",
+                              fontWeight: 700, fontSize: 10, letterSpacing: 1,
+                              textTransform: "uppercase", borderRadius: 6, minWidth: 100,
+                              cursor: "pointer", userSelect: "none",
+                              border: sortByCol === 'first' ? "1px solid #fbbf24" : "1px solid transparent"
+                            }}>
+                              {firstTime}{sortByCol === 'first' ? " ▲" : ""}
+                            </th>
+                            <th onClick={() => setSortByCol('last')} style={{
+                              background: sortByCol === 'last' ? "#2d2500" : "#1c1a0e",
+                              padding: "10px 10px", textAlign: "center",
+                              color: sortByCol === 'last' ? "#fde68a" : "#fbbf24",
+                              fontWeight: 700, fontSize: 10, letterSpacing: 1,
+                              textTransform: "uppercase", borderRadius: 6, minWidth: 100,
+                              cursor: "pointer", userSelect: "none",
+                              border: sortByCol === 'last' ? "1px solid #fbbf24" : "1px solid transparent"
+                            }}>
+                              {lastTime}{sortByCol === 'last' ? " ▲" : ""}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {sortedByLast.map((country, i) => {
+                            const fVal = singleDs ? firstRawVals[country] : firstAvgRanks[country];
+                            const lVal = singleDs ? lastRawVals[country] : lastAvgRanks[country];
+                            const fColor = singleDs ? (() => {
+                              const vals = COUNTRIES.map(c => firstRawVals[c]).filter(v => v != null).sort((a,b) => singleDs.goodDirection === 1 ? b-a : a-b);
+                              const rank = vals.indexOf(fVal) + 1;
+                              return rank > 0 ? getRankColor(rank) : "#111827";
+                            })() : (fVal != null ? getRankColor(fVal) : "#111827");
+                            const lColor = singleDs ? (() => {
+                              const vals = COUNTRIES.map(c => lastRawVals[c]).filter(v => v != null).sort((a,b) => singleDs.goodDirection === 1 ? b-a : a-b);
+                              const rank = vals.indexOf(lVal) + 1;
+                              return rank > 0 ? getRankColor(rank) : "#111827";
+                            })() : (lVal != null ? getRankColor(lVal) : "#111827");
+                            return (
+                              <tr key={country}>
+                                <td style={{
+                                  background: "#151f35", padding: "7px 14px", fontWeight: 600,
+                                  color: "#f1f5f9", borderRadius: 6,
+                                  position: "sticky", left: 0, zIndex: 5, whiteSpace: "nowrap"
+                                }}>
+                                  <span style={{ color: "#374151", marginRight: 6, fontSize: 10 }}>{i + 1}.</span>
+                                  {COUNTRY_NAMES[country]}
+                                  <span style={{ color: "#334155", marginLeft: 4, fontSize: 9 }}>({country})</span>
+                                </td>
+                                <td style={{
+                                  background: fColor, padding: "7px 10px", textAlign: "center",
+                                  borderRadius: 5, fontWeight: 700, fontSize: singleDs ? 11 : 14,
+                                  color: "rgba(255,255,255,0.95)"
+                                }}>
+                                  {fVal != null ? (singleDs ? fVal.toLocaleString("hu-HU", { maximumFractionDigits: 2 }) : fVal.toFixed(1)) : "—"}
+                                </td>
+                                <td style={{
+                                  background: lColor, padding: "7px 10px", textAlign: "center",
+                                  borderRadius: 5, fontWeight: 700, fontSize: singleDs ? 11 : 14,
+                                  color: "rgba(255,255,255,0.95)"
+                                }}>
+                                  {lVal != null ? (singleDs ? lVal.toLocaleString("hu-HU", { maximumFractionDigits: 2 }) : lVal.toFixed(1)) : "—"}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </>
             )}
 
