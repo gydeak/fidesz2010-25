@@ -329,64 +329,59 @@
       const singleDs = visibleDatasets.length === 1 ? visibleDatasets[0] : null;
 
       // Minden visible dataset-re: első és utolsó közös időpont
-      const getCommonTimes = (datasets) => {
-        if (datasets.length === 0) return { first: null, last: null };
-        const timeSets = datasets.map(ds => {
-          const allTimes = new Set();
-          for (const c of COUNTRIES) {
-            Object.keys(rawData[ds.id]?.[c] || {}).forEach(t => allTimes.add(t));
-          }
-          return allTimes;
-        });
-        // közös időpontok ahol MINDEN ország és MINDEN dataset adott
-        const allCountryTimes = datasets.map(ds =>
-          COUNTRIES.map(c => new Set(Object.keys(rawData[ds.id]?.[c] || {})))
-        );
-        // időpontok amelyek minden dataset minden országánál megvannak
-        let common = null;
-        for (const ds of datasets) {
-          const dsCountryTimes = COUNTRIES.map(c => new Set(Object.keys(rawData[ds.id]?.[c] || {})));
-          const intersection = dsCountryTimes.reduce((a, b) => new Set([...a].filter(x => b.has(x))));
-          common = common === null ? intersection : new Set([...common].filter(x => intersection.has(x)));
-        }
-        if (!common || common.size === 0) return { first: null, last: null };
-        const sorted = [...common].sort();
+      // Egy datasetre megkeresi az első és utolsó közös időpontot (ahol minden ország adott)
+      const getDsCommonTimes = (ds) => {
+        const dsCountryTimes = COUNTRIES.map(c => new Set(Object.keys(rawData[ds.id]?.[c] || {})));
+        if (dsCountryTimes.some(s => s.size === 0)) return { first: null, last: null };
+        const intersection = dsCountryTimes.reduce((a, b) => new Set([...a].filter(x => b.has(x))));
+        if (intersection.size === 0) return { first: null, last: null };
+        const sorted = [...intersection].sort();
         return { first: sorted[0], last: sorted[sorted.length - 1] };
       };
 
-      const { first: firstTime, last: lastTime } = getCommonTimes(visibleDatasets);
+      // firstTime / lastTime: fejléc megjelenítéshez
+      // single dataset esetén annak saját időpontjai; több datasetnél a legkorábbi first és legkésőbbi last
+      const { first: firstTime, last: lastTime } = (() => {
+        if (visibleDatasets.length === 0) return { first: null, last: null };
+        const perDs = visibleDatasets.map(ds => getDsCommonTimes(ds));
+        if (singleDs) return perDs[0];
+        const firsts = perDs.map(t => t.first).filter(Boolean).sort();
+        const lasts  = perDs.map(t => t.last).filter(Boolean).sort();
+        return { first: firsts[0] ?? null, last: lasts[lasts.length - 1] ?? null };
+      })();
 
-      // Első időpont szerinti rangsor (minden visible dataset-re)
+      // Első/utolsó időpont szerinti rangsor (minden visible dataset saját időpontján)
       const firstRanks = {};
       const lastRanks = {};
       const firstRawVals = {}; // csak single dataset esetén
       const lastRawVals = {};
 
-      if (firstTime && lastTime) {
-        if (singleDs) {
-          // Nyers értékek single dataset esetén
+      if (singleDs) {
+        const { first: f, last: l } = getDsCommonTimes(singleDs);
+        if (f && l) {
           for (const c of COUNTRIES) {
-            firstRawVals[c] = rawData[singleDs.id]?.[c]?.[firstTime] ?? null;
-            lastRawVals[c] = rawData[singleDs.id]?.[c]?.[lastTime] ?? null;
+            firstRawVals[c] = rawData[singleDs.id]?.[c]?.[f] ?? null;
+            lastRawVals[c] = rawData[singleDs.id]?.[c]?.[l] ?? null;
           }
-        } else {
-          // Átlag helyezés minden visible dataset első/utolsó időpontján
-          for (const ds of visibleDatasets) {
-            // első időpont rangsor erre a datasetre
-            const firstScores = {};
-            const lastScores = {};
-            for (const c of COUNTRIES) {
-              const fv = rawData[ds.id]?.[c]?.[firstTime];
-              const lv = rawData[ds.id]?.[c]?.[lastTime];
-              if (fv != null) firstScores[c] = ds.goodDirection === 1 ? fv : -fv;
-              if (lv != null) lastScores[c] = ds.goodDirection === 1 ? lv : -lv;
-            }
-            const fRanked = rankCountries(firstScores);
-            const lRanked = rankCountries(lastScores);
-            for (const c of COUNTRIES) {
-              if (fRanked[c] != null) firstRanks[c] = (firstRanks[c] || []).concat(fRanked[c]);
-              if (lRanked[c] != null) lastRanks[c] = (lastRanks[c] || []).concat(lRanked[c]);
-            }
+        }
+      } else {
+        // Minden dataset a saját első/utolsó közös időpontját használja — így éves és negyedéves is működik együtt
+        for (const ds of visibleDatasets) {
+          const { first: f, last: l } = getDsCommonTimes(ds);
+          if (!f || !l) continue;
+          const firstScores = {};
+          const lastScores = {};
+          for (const c of COUNTRIES) {
+            const fv = rawData[ds.id]?.[c]?.[f];
+            const lv = rawData[ds.id]?.[c]?.[l];
+            if (fv != null) firstScores[c] = ds.goodDirection === 1 ? fv : -fv;
+            if (lv != null) lastScores[c] = ds.goodDirection === 1 ? lv : -lv;
+          }
+          const fRanked = rankCountries(firstScores);
+          const lRanked = rankCountries(lastScores);
+          for (const c of COUNTRIES) {
+            if (fRanked[c] != null) firstRanks[c] = (firstRanks[c] || []).concat(fRanked[c]);
+            if (lRanked[c] != null) lastRanks[c] = (lastRanks[c] || []).concat(lRanked[c]);
           }
         }
       }
@@ -455,10 +450,10 @@
                         padding: "5px 12px", borderRadius: 20,
                         border: "1px solid " + (active ? "transparent" : "#334155"),
                         cursor: "pointer", fontSize: 11, fontWeight: 600, transition: "all 0.2s",
-                        background: active ? (ds && ds.goodDirection === 1 ? "#166534" : "#7f1d1d") : "#1e293b",
+                        background: active ? "#166534" : "#1e293b",
                         color: active ? "#fff" : "#cbd5e1"
                       }}>
-                        {active ? (ds && ds.goodDirection === 1 ? "▲ " : "▼ ") : ""}{g.label}
+                        {g.label}
                       </button>
                     );
                   })}
@@ -614,7 +609,7 @@
                               cursor: "pointer", userSelect: "none",
                               border: sortByCol === 'first' ? "1px solid #fbbf24" : "1px solid transparent"
                             }}>
-                              {firstTime}{sortByCol === 'first' ? " ▲" : ""}
+                              {singleDs ? firstTime : firstTime?.replace(/-Q\d$/, "").substring(0, 4)}{sortByCol === 'first' ? " ▲" : ""}
                             </th>
                             <th onClick={() => setSortByCol('last')} style={{
                               background: sortByCol === 'last' ? "#2d2500" : "#1c1a0e",
@@ -625,7 +620,7 @@
                               cursor: "pointer", userSelect: "none",
                               border: sortByCol === 'last' ? "1px solid #fbbf24" : "1px solid transparent"
                             }}>
-                              {lastTime}{sortByCol === 'last' ? " ▲" : ""}
+                              {singleDs ? lastTime : lastTime?.replace(/-Q\d$/, "").substring(0, 4)}{sortByCol === 'last' ? " ▲" : ""}
                             </th>
                           </tr>
                         </thead>
