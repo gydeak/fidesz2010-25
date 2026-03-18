@@ -40,6 +40,7 @@
     const DATASETS = [
       { id: "demo_mlexpec",   label: "Várható élettartam",  method: "diff",  goodDirection: +1, params: { freq: "A", unit: "YR", sex: "T", age: "Y_LT1" },                                               from: "2010",    to: "2026"    },
       { id: "ilc_di03",       label: "Mediánjövedelem",     method: "ratio", goodDirection: +1, params: { freq: "A", age: "TOTAL", sex: "T", indic_il: "MED_E", unit: "PPS" },                             from: "2010",    to: "2026"    },
+      { id: "nama_10_gdp",       label: "Munkajövedelem",     method: "ratio", goodDirection: +1, params: { freq: "A", unit: "PC_GDP", na_item: "D1" },                             from: "2010",    to: "2026"    },
       { id: "env_ac_aigg_q",  label: "Üvegházhatású gáz",          method: "ratio", goodDirection: -1, params: { freq: "Q", s_adj: "SA", nace_r2: "TOTAL_HH", airpol: "GHG", unit: "T_HAB" },                    from: "2010-Q2", to: "2026-Q2" },
       { id: "demo_find",      label: "Termékenység",         method: "ratio", goodDirection: +1, params: { freq: "A", indic_de: "TOTFERRT" },                                                               from: "2010",    to: "2026"    },
       { id: "lfsi_emp_q",     label: "Foglalkoztatás",       method: "ratio", goodDirection: +1, params: { freq: "Q", indic_em: "ACT", s_adj: "NSA", sex: "T", age: "Y15-74", unit: "PC_POP" },            from: "2010-Q2", to: "2026-Q2" },
