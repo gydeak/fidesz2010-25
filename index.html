@@ -265,6 +265,9 @@
 
     const GROUPS = DATASETS.filter(ds => !ds.hidden).map(ds => ({ key: ds.id, label: ds.label, ids: [ds.id] }));
 
+    // Ezek az indikátorok indexek, ezért az abszolút helyzetnél nem értelmezhetők nyers sorrendként
+    const INDEX_ONLY_IDS = new Set(["prc_hicp_minr", "prc_hpi_q"]);
+
     function App() {
       const [results, setResults] = useState({});
       const [rawData, setRawData] = useState({});
@@ -322,6 +325,9 @@
       const visibleIds = new Set(GROUPS.filter(g => selectedGroups.has(g.key)).flatMap(g => g.ids));
       const visibleDatasets = DATASETS.filter(ds => visibleIds.has(ds.id));
 
+      // Abszolút helyzethez csak a nem-index datasetek (infláció és lakásár kizárva)
+      const absDatasets = visibleDatasets.filter(ds => !INDEX_ONLY_IDS.has(ds.id));
+
       const avgRanks = {};
       for (const c of COUNTRIES) {
         const ranks = visibleDatasets.map(ds => results[ds.id]?.[c]).filter(r => r != null);
@@ -344,11 +350,12 @@
       };
 
       // firstTime / lastTime: fejléc megjelenítéshez
-      // single dataset esetén annak saját időpontjai; több datasetnél a legkorábbi first és legkésőbbi last
+      // single dataset esetén annak saját időpontjai; több datasetnél az absDatasets alapján (infláció/lakásár kizárva)
       const { first: firstTime, last: lastTime } = (() => {
         if (visibleDatasets.length === 0) return { first: null, last: null };
-        const perDs = visibleDatasets.map(ds => getDsCommonTimes(ds));
-        if (singleDs) return perDs[0];
+        if (singleDs) return getDsCommonTimes(singleDs);
+        if (absDatasets.length === 0) return { first: null, last: null };
+        const perDs = absDatasets.map(ds => getDsCommonTimes(ds));
         const firsts = perDs.map(t => t.first).filter(Boolean).sort();
         const lasts  = perDs.map(t => t.last).filter(Boolean).sort();
         return { first: firsts[0] ?? null, last: lasts[lasts.length - 1] ?? null };
@@ -369,8 +376,8 @@
           }
         }
       } else {
-        // Minden dataset a saját első/utolsó közös időpontját használja — így éves és negyedéves is működik együtt
-        for (const ds of visibleDatasets) {
+        // Több dataset esetén csak az absDatasets alapján számítunk (infláció és lakásár kizárva)
+        for (const ds of absDatasets) {
           const { first: f, last: l } = getDsCommonTimes(ds);
           if (!f || !l) continue;
           const firstScores = {};
