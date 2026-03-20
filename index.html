@@ -694,8 +694,9 @@
 
     // ── Visszajelző Footer ───────────────────────────────────────────────────
     const EMAILJS_SERVICE_ID  = "service_rmziako";   // ← cseréld ki
-    const EMAILJS_TEMPLATE_ID = "template_m3vwywq";  // ← cseréld ki
+    const EMAILJS_TEMPLATE_ID = "template_zbtawgl";  // ← cseréld ki
     const EMAILJS_PUBLIC_KEY  = "J85CBAuCWfiwlloG7";   // ← cseréld ki
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
     function FeedbackFooter() {
       const [name, setName] = React.useState("");
@@ -710,7 +711,7 @@
           await emailjs.send(
             EMAILJS_SERVICE_ID,
             EMAILJS_TEMPLATE_ID,
-            { from_name: name.trim() || "Névtelen", name: name.trim() || "Névtelen", reply_to: email.trim(), message: message.trim(), to_email: "gydeak@gmail.com" },
+            { from_name: name.trim() || "Névtelen", name: name.trim() || "Névtelen", reply_to: email.trim(), email: email.trim(), message: message.trim(), to_email: "gydeak@gmail.com", title: "Visszajelzés" },
             EMAILJS_PUBLIC_KEY
           );
           setStatus("ok");
