@@ -702,7 +702,7 @@
       const [email, setEmail] = React.useState("");
       const [message, setMessage] = React.useState("");
       const [status, setStatus] = React.useState(null); // null | "sending" | "ok" | "err"
- 
+
       const send = async () => {
         if (!message.trim()) return;
         setStatus("sending");
@@ -710,7 +710,7 @@
           await emailjs.send(
             EMAILJS_SERVICE_ID,
             EMAILJS_TEMPLATE_ID,
-            { from_name: name.trim() || "Névtelen", reply_to: email.trim(), message: message.trim(), to_email: "gydeak@gmail.com" },
+            { from_name: name.trim() || "Névtelen", name: name.trim() || "Névtelen", reply_to: email.trim(), message: message.trim(), to_email: "gydeak@gmail.com" },
             EMAILJS_PUBLIC_KEY
           );
           setStatus("ok");
