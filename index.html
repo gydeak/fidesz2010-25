@@ -746,6 +746,12 @@
               value={name} onChange={e => setName(e.target.value)}
               style={{ ...inputStyle, height: 38 }}
             />
+            <input
+              type="email"
+              placeholder="E-mail címed (kötelező)"
+              value={email} onChange={e => setEmail(e.target.value)}
+              style={{ ...inputStyle, height: 38, borderColor: email.trim() ? "#1e3a5f" : "#4b1c1c" }}
+            />
             <textarea
               placeholder="Írd le a hibát vagy fejlesztési ötletet..."
               rows={4} value={message} onChange={e => setMessage(e.target.value)}
@@ -754,13 +760,13 @@
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <button
                 onClick={send}
-                disabled={status === "sending" || !message.trim()}
+                disabled={status === "sending" || !message.trim() || !email.trim()}
                 style={{
-                  background: (status === "sending" || !message.trim()) ? "#1e293b" : "#166534",
-                  color: (status === "sending" || !message.trim()) ? "#475569" : "#fff",
+                  background: (status === "sending" || !message.trim() || !email.trim()) ? "#1e293b" : "#166534",
+                  color: (status === "sending" || !message.trim() || !email.trim()) ? "#475569" : "#fff",
                   border: "none", borderRadius: 8, padding: "10px 24px",
                   fontSize: 13, fontWeight: 700,
-                  cursor: (status === "sending" || !message.trim()) ? "default" : "pointer",
+                  cursor: (status === "sending" || !message.trim() || !email.trim()) ? "default" : "pointer",
                   transition: "background 0.2s", whiteSpace: "nowrap"
                 }}
               >
@@ -782,7 +788,7 @@
         </>
       );
     }
-
+    
     ReactDOM.createRoot(document.getElementById("root")).render(<Root />);
   </script>
 </body>
