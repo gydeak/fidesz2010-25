@@ -701,11 +701,12 @@
     function FeedbackFooter() {
       const [name, setName] = React.useState("");
       const [email, setEmail] = React.useState("");
+      const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
       const [message, setMessage] = React.useState("");
       const [status, setStatus] = React.useState(null); // null | "sending" | "ok" | "err"
 
       const send = async () => {
-        if (!message.trim()) return;
+        if (!message.trim() || !isValidEmail(email)) return;
         setStatus("sending");
         try {
           await emailjs.send(
@@ -751,7 +752,7 @@
               type="email"
               placeholder="E-mail címed (kötelező)"
               value={email} onChange={e => setEmail(e.target.value)}
-              style={{ ...inputStyle, height: 38, borderColor: email.trim() ? "#1e3a5f" : "#4b1c1c" }}
+              style={{ ...inputStyle, height: 38, borderColor: email.trim() ? (isValidEmail(email) ? "#166534" : "#991b1b") : "#4b1c1c" }}
             />
             <textarea
               placeholder="Írd le a hibát vagy fejlesztési ötletet..."
@@ -761,13 +762,13 @@
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <button
                 onClick={send}
-                disabled={status === "sending" || !message.trim() || !email.trim()}
+                disabled={status === "sending" || !message.trim() || !isValidEmail(email)}
                 style={{
-                  background: (status === "sending" || !message.trim() || !email.trim()) ? "#1e293b" : "#166534",
-                  color: (status === "sending" || !message.trim() || !email.trim()) ? "#475569" : "#fff",
+                  background: (status === "sending" || !message.trim() || !isValidEmail(email)) ? "#1e293b" : "#166534",
+                  color: (status === "sending" || !message.trim() || !isValidEmail(email)) ? "#475569" : "#fff",
                   border: "none", borderRadius: 8, padding: "10px 24px",
                   fontSize: 13, fontWeight: 700,
-                  cursor: (status === "sending" || !message.trim() || !email.trim()) ? "default" : "pointer",
+                  cursor: (status === "sending" || !message.trim() || !isValidEmail(email)) ? "default" : "pointer",
                   transition: "background 0.2s", whiteSpace: "nowrap"
                 }}
               >
