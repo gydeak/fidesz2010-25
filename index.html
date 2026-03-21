@@ -699,7 +699,71 @@
       );
     }
 
+    // ── Megosztás gombsor ────────────────────────────────────────────────────
+    function ShareButtons() {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent("A FIDESZ kormányok teljesítménye 2010-2025 között a kelet-közép-európai országok viszonylatában");
 
+      const buttons = [
+        {
+          label: "Facebook",
+          color: "#1877f2",
+          icon: "f",
+          href: `https://www.facebook.com/sharer/sharer.php?u=${url}`
+        },
+        {
+          label: "X",
+          color: "#000000",
+          icon: "𝕏",
+          href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`
+        },
+        {
+          label: "WhatsApp",
+          color: "#25d366",
+          icon: "W",
+          href: `https://wa.me/?text=${title}%20${url}`
+        },
+        {
+          label: "LinkedIn",
+          color: "#0a66c2",
+          icon: "in",
+          href: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+        },
+        {
+          label: "Email",
+          color: "#475569",
+          icon: "✉",
+          href: `mailto:?subject=${title}&body=${url}`
+        },
+      ];
+
+      return (
+        <div style={{ borderTop: "1px solid #1e293b", background: "#0d1626", padding: "24px 16px 8px" }}>
+          <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
+            <span style={{ color: "#94a3b8", fontSize: 12, textTransform: "uppercase", letterSpacing: 1, fontWeight: 600 }}>
+              Megosztás
+            </span>
+            <div style={{ display: "flex", justifyContent: "center", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
+              {buttons.map(btn => (
+                <a key={btn.label} href={btn.href} target="_blank" rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    background: btn.color, color: "#fff",
+                    padding: "7px 14px", borderRadius: 20,
+                    fontSize: 12, fontWeight: 700, textDecoration: "none",
+                    transition: "opacity 0.2s", opacity: 1
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = "0.8"}
+                  onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                >
+                  <span style={{ fontSize: 13 }}>{btn.icon}</span> {btn.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     // ── Visszajelző Footer ───────────────────────────────────────────────────
     const EMAILJS_SERVICE_ID  = "service_rmziako";   // ← cseréld ki
