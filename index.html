@@ -78,6 +78,58 @@
       { id: "spr_exp_pens",     label: "Nyugdíjkiadás (PPS)",     method: "ratio", goodDirection: +1, params: { freq: "A", spdepb: "OLD", spdepm: "TOTAL", unit: "MIO_PPS" }, from: "2010", to: "2026", hidden: true },
       { id: "spr_pns_ben",       label: "Nyugdíjasok száma",        method: "ratio", goodDirection: +1, params: { freq: "A", spdepm: "TOTAL", spscheme: "TOTAL", spdepb: "OLD", sex: "T", unit: "PER" }, from: "2010", to: "2026", hidden: true },
       { id: "nyugdij_egy_fore",  label: "Átlagnyugdíj",    method: "ratio", goodDirection: +1, params: null, from: "2010", to: "2026", derived: ["spr_exp_pens", "spr_pns_ben"] },
+      // Császármetszések aránya: derived = hlth_co_proc3 (CM74_CAE) / demo_gind (LBIRTH) * 100
+      { id: "hlth_co_proc3_cs",  label: "Császármetszések száma",  method: "ratio", goodDirection: -1,
+        params: { freq: "A", icha_hc: "TOT_PAT", unit: "NR", icd9cm: "CM74_CAE" },
+        from: "2010", to: "2026", hidden: true, useTsv: true, dsOverride: "hlth_co_proc3" },
+      { id: "demo_gind_lb",      label: "Élveszületések száma",    method: "ratio", goodDirection: +1,
+        params: { freq: "A", indic_de: "LBIRTH" },
+        from: "2010", to: "2026", hidden: true, dsOverride: "demo_gind" },
+      { id: "csaszarmetszesek",  label: "Császármetszések aránya", method: "ratio", goodDirection: -1,
+        params: null, from: "2010", to: "2026",
+        derived: ["hlth_co_proc3_cs", "demo_gind_lb"], derivedOp: "ratio_pct" },
+
+      // ── Külföldi tőke súlya ────────────────────────────────────────────────
+      // Számláló (külföldi vállalatok hozzáadott értéke) – két időszak
+      { id: "fats_va_old", label: "Külföldi vállalatok értéke 2010-2020", method: "ratio", goodDirection: +1,
+        params: { freq: "A", nace_r2: "B-N_S95_X_K", indic_sb: "V12150", c_ctrl: "WRL_X_REP" },
+        from: "2010", to: "2020", hidden: true, dsOverride: "fats_g1a_08" },
+      { id: "fats_va_new", label: "Külföldi vállalatok értéke 2021-2023", method: "ratio", goodDirection: +1,
+        params: { freq: "A", nace_r2: "B-S_X_O_S94", indic_sbs: "AV_MEUR", c_ctrl: "WRL_REST" },
+        from: "2021", to: "2023", hidden: true, dsOverride: "fats_activ" },
+      // Nevező (összes vállalat hozzáadott értéke) – két időszak
+      { id: "sbs_va_old", label: "Összes vállalat értéke 2010-2020", method: "ratio", goodDirection: +1,
+        params: { freq: "A", nace_r2: "B-N_S95_X_K", indic_sb: "V12150", size_emp: "TOTAL" },
+        from: "2010", to: "2020", hidden: true, dsOverride: "sbs_sc_sca_r2" },
+      { id: "sbs_va_new", label: "Összes vállalat értéke 2021-2024", method: "ratio", goodDirection: +1,
+        params: { freq: "A", indic_sbs: "AV_MEUR", nace_r2: "B-S_X_O_S94", size_emp: "TOTAL" },
+        from: "2021", to: "2024", hidden: true, dsOverride: "sbs_sc_ovw" },
+      // Derived: összefűzött arány (külföldi VA / összes VA × 100)
+      { id: "kulfoldi_vallalatok", label: "Külföldi vállalatok gazdasági súlya", method: "ratio", goodDirection: -1,
+        params: null, from: "2010", to: "2024",
+        derived: ["fats_va_old", "fats_va_new", "sbs_va_old", "sbs_va_new"],
+        derivedOp: "concat_ratio" },
+
+      // ── Külföldi tőke munkaerőpiaci súlya ─────────────────────────────────
+      // Számláló (külföldi vállalatok foglalkoztatottjai) – két időszak
+      { id: "fats_emp_old", label: "Külföldi vállalatok foglalkoztatottjai 2010-2020", method: "ratio", goodDirection: +1,
+        params: { freq: "A", nace_r2: "B-N_S95_X_K", indic_sb: "V16110", c_ctrl: "WRL_X_REP" },
+        from: "2010", to: "2020", hidden: true, dsOverride: "fats_g1a_08" },
+      { id: "fats_emp_new", label: "Külföldi vállalatok foglalkoztatottjai 2021-2023", method: "ratio", goodDirection: +1,
+        params: { freq: "A", nace_r2: "B-S_X_O_S94", indic_sbs: "EMP_NR", c_ctrl: "WRL_REST" },
+        from: "2021", to: "2023", hidden: true, dsOverride: "fats_activ" },
+      // Nevező (összes vállalat foglalkoztatottjai) – két időszak
+      { id: "sbs_emp_old", label: "Összes vállalat foglalkoztatottjai 2010-2020", method: "ratio", goodDirection: +1,
+        params: { freq: "A", nace_r2: "B-N_S95_X_K", indic_sb: "V16110", size_emp: "TOTAL" },
+        from: "2010", to: "2020", hidden: true, dsOverride: "sbs_sc_sca_r2" },
+      { id: "sbs_emp_new", label: "Összes vállalat foglalkoztatottjai 2021-2024", method: "ratio", goodDirection: +1,
+        params: { freq: "A", indic_sbs: "EMP_NR", nace_r2: "B-S_X_O_S94", size_emp: "TOTAL" },
+        from: "2021", to: "2024", hidden: true, dsOverride: "sbs_sc_ovw" },
+      // Derived: összefűzött arány (külföldi EMP / összes EMP × 100)
+      { id: "kulfoldi_munkaero", label: "Külföldi tőke munkaerőpiaci súlya", method: "ratio", goodDirection: -1,
+        params: null, from: "2010", to: "2024",
+        derived: ["fats_emp_old", "fats_emp_new", "sbs_emp_old", "sbs_emp_new"],
+        derivedOp: "concat_ratio" },
     ];
 
     async function fetchDataset(ds) {
@@ -95,24 +147,31 @@
       const dimParams = Object.entries(ds.params).map(([k,v]) => `c[${k}]=${encodeURIComponent(v)}`).join("&");
       const dsId = ds.dsOverride || ds.id;
       const url = `https://ec.europa.eu/eurostat/api/dissemination/sdmx/3.0/data/dataflow/ESTAT/${dsId}/1.0/*?${dimParams}&c[geo]=${geoList}&c[TIME_PERIOD]=ge:${ds.from}+le:${ds.to}&compress=false&format=tsv`;
+    
       const resp = await fetch(url);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const text = await resp.text();
       const lines = text.split("\n");
       if (lines.length < 2) throw new Error("Üres TSV");
-      // Header: "freq,...,geo\TIME_PERIOD	2010	2011	..."
+
+      // === JAVÍTÁS: geo pozíciójának dinamikus meghatározása a headerből ===
+      const headerDims = lines[0].split("\t")[0].split(",").map(d => d.trim().toLowerCase());
+      const geoPos = headerDims.indexOf("geo");
+      if (geoPos === -1) throw new Error("Geo dimenzió nem található a TSV headerben");
+
       const dates = lines[0].split("\t").slice(1).map(d => d.trim()).filter(Boolean);
       const result = {};
+
       for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
         const cols = lines[i].split("\t");
-        const rowKey = cols[0];
-        // geo is the last comma-separated field in rowKey
-        const geo = rowKey.split(",").pop().trim();
+        const rowKeyParts = cols[0].split(",").map(p => p.trim().toUpperCase());
+        const geo = rowKeyParts[geoPos];
         if (!COUNTRIES.includes(geo)) continue;
+
         result[geo] = {};
         for (let j = 1; j < cols.length && j <= dates.length; j++) {
-          // strip flags like " e", " p", " b"
+          // strip flags like " e", " p", " b", ":"
           const v = parseFloat(cols[j].trim().replace(/[^\d.-]/g, ""));
           if (!isNaN(v)) result[geo][dates[j-1]] = v;
         }
@@ -296,8 +355,31 @@
           setLoading(prev => ({ ...prev, [ds.id]: true }));
           try {
             let parsed;
-            if (ds.derived) {
-              // Derived: kiadás / ellátottak száma
+            if (ds.derivedOp === "concat_ratio") {
+              // 4 forrás: [num_old, num_new, den_old, den_new]
+              // Összefűzi a két időszakot, majd kiszámolja az arányt (%)
+              const [numOldId, numNewId, denOldId, denNewId] = ds.derived;
+              const numOld = parsedCache[numOldId];
+              const numNew = parsedCache[numNewId];
+              const denOld = parsedCache[denOldId];
+              const denNew = parsedCache[denNewId];
+              if (!numOld || !numNew || !denOld || !denNew) throw new Error("Forrásadat hiányzik");
+              parsed = {};
+              for (const c of COUNTRIES) {
+                parsed[c] = {};
+                // Összefűzött számláló és nevező: old + new (new felülírja az átfedő éveket)
+                const numMerged = { ...(numOld[c] || {}), ...(numNew[c] || {}) };
+                const denMerged = { ...(denOld[c] || {}), ...(denNew[c] || {}) };
+                for (const t of Object.keys(numMerged)) {
+                  if (denMerged[t] != null && denMerged[t] !== 0) {
+                    parsed[c][t] = (numMerged[t] / denMerged[t]) * 100;
+                  }
+                }
+                // Ha nincs adat, töröljük az üres objektumot
+                if (Object.keys(parsed[c]).length === 0) delete parsed[c];
+              }
+            } else if (ds.derived) {
+              // Derived: számított mutató két forrásadatból
               const [numId, denId] = ds.derived;
               const numData = parsedCache[numId];
               const denData = parsedCache[denId];
@@ -307,10 +389,20 @@
                 if (!numData[c] || !denData[c]) continue;
                 parsed[c] = {};
                 for (const t of Object.keys(numData[c])) {
-                  if (denData[c][t] && denData[c][t] !== 0)
-                    parsed[c][t] = (numData[c][t] * 1_000_000) / denData[c][t];
+                  if (denData[c][t] && denData[c][t] !== 0) {
+                    if (ds.derivedOp === "ratio_pct") {
+                      // Százalékos arány: számláló / nevező * 100
+                      parsed[c][t] = (numData[c][t] / denData[c][t]) * 100;
+                    } else {
+                      // Alapértelmezett: nyugdíj-típusú (PPS millió → egyéni)
+                      parsed[c][t] = (numData[c][t] * 1_000_000) / denData[c][t];
+                    }
+                  }
                 }
               }
+            } else if (ds.useTsv) {
+              // TSV-alapú betöltés (pl. hlth_co_proc3)
+              parsed = await fetchAndParseTsv(ds);
             } else {
               const data = await fetchDataset(ds);
               parsed = parseEurostatJSON(data);
@@ -511,7 +603,7 @@
                           background: "#1c1a0e", padding: "10px 10px", textAlign: "center",
                           color: "#fbbf24", fontWeight: 700, fontSize: 10, letterSpacing: 1,
                           textTransform: "uppercase", borderRadius: 6, minWidth: 80
-                        }}>Átlag</th>
+                        }}>Átlag helyezés</th>
                         {showDetails && visibleDatasets.map(ds => (
                           <th key={ds.id} style={{
                             background: "#151f35", padding: "6px 4px", textAlign: "center",
@@ -599,8 +691,8 @@
                     ))}
                   </div>
                   <div style={{ color: "#475569", fontSize: 10, maxWidth: 500 }}>
-                    <span style={{ color: "#34d399" }}>▲ jobb</span>: növekedés a cél (jövedelem, élettartam, foglalkoztatás, termékenység, K+F, házt. vagyon)&nbsp;&nbsp;
-                    <span style={{ color: "#f87171" }}>▼ jobb</span>: csökkenés a cél (adósság, infláció, egyenlőtlenség, bűnözés, üvegházgáz, lakásár, kamat, szegénység, öngyilkosság)
+                    <span style={{ color: "#34d399" }}>▲ jobb</span>: növekedés a cél (jövedelem, élettartam, foglalkoztatás, termékenység, K+F, házt. vagyon, külföldi tőke)&nbsp;&nbsp;
+                    <span style={{ color: "#f87171" }}>▼ jobb</span>: csökkenés a cél (adósság, infláció, egyenlőtlenség, bűnözés, üvegházgáz, lakásár, kamat, szegénység, öngyilkosság, császármetszés)
                   </div>
                 </div>
 
@@ -770,9 +862,9 @@
     }
 
     // ── Visszajelző Footer ───────────────────────────────────────────────────
-    const EMAILJS_SERVICE_ID  = "service_rmziako";   // ← cseréld ki
-    const EMAILJS_TEMPLATE_ID = "template_zbtawgl";  // ← cseréld ki
-    const EMAILJS_PUBLIC_KEY  = "J85CBAuCWfiwlloG7";   // ← cseréld ki
+    const EMAILJS_SERVICE_ID  = "service_rmziako";
+    const EMAILJS_TEMPLATE_ID = "template_zbtawgl";
+    const EMAILJS_PUBLIC_KEY  = "J85CBAuCWfiwlloG7";
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
     function FeedbackFooter() {
