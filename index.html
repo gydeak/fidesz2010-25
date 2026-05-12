@@ -118,17 +118,17 @@
         from: "2010", to: "2020", hidden: true, dsOverride: "fats_g1a_08" },
       { id: "fats_emp_new", label: "Külföldi vállalatok foglalkoztatottjai 2021-2023", method: "ratio", goodDirection: +1,
         params: { freq: "A", nace_r2: "B-S_X_O_S94", indic_sbs: "EMP_NR", c_ctrl: "WRL_REST" },
-        from: "2021", to: "2023", hidden: true, dsOverride: "fats_activ" },
+        from: "2021", to: "2026", hidden: true, dsOverride: "fats_activ" },
       // Nevező (összes vállalat foglalkoztatottjai) – két időszak
       { id: "sbs_emp_old", label: "Összes vállalat foglalkoztatottjai 2010-2020", method: "ratio", goodDirection: +1,
         params: { freq: "A", nace_r2: "B-N_S95_X_K", indic_sb: "V16110", size_emp: "TOTAL" },
         from: "2010", to: "2020", hidden: true, dsOverride: "sbs_sc_sca_r2" },
       { id: "sbs_emp_new", label: "Összes vállalat foglalkoztatottjai 2021-2024", method: "ratio", goodDirection: +1,
         params: { freq: "A", indic_sbs: "EMP_NR", nace_r2: "B-S_X_O_S94", size_emp: "TOTAL" },
-        from: "2021", to: "2024", hidden: true, dsOverride: "sbs_sc_ovw" },
+        from: "2021", to: "2026", hidden: true, dsOverride: "sbs_sc_ovw" },
       // Derived: összefűzött arány (külföldi EMP / összes EMP × 100)
       { id: "kulfoldi_munkaero", label: "Külföldi tőke munkaerőpiaci súlya", method: "ratio", goodDirection: -1,
-        params: null, from: "2010", to: "2024",
+        params: null, from: "2010", to: "2026",
         derived: ["fats_emp_old", "fats_emp_new", "sbs_emp_old", "sbs_emp_new"],
         derivedOp: "concat_ratio" },
     ];
